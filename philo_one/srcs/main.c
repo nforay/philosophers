@@ -6,53 +6,79 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 18:35:48 by nforay            #+#    #+#             */
-/*   Updated: 2020/10/25 02:30:32 by nforay           ###   ########.fr       */
+/*   Updated: 2020/10/25 23:16:50 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int	str_conv_uint(char *str, unsigned int *nbr)
+int	start_philosophers(t_philosopher *phi, t_params *params)
 {
-	if (!str || *str == 0)
-		return (1);
-	while (*str && *str >= '0' && *str <= '9')
-	{
-		*nbr = *nbr * 10 + *str - '0';
-		str++;
-	}
-	if (*str == 0)
+	if (!phi)
 		return (0);
-	return (1);
+	phi->state = (phi->nbr % 2 && phi->next) ? TAKING : THINKING;
+	phi->starvation->tv_sec = phi->params->time->tv_sec;
+	phi->starvation->tv_usec = phi->params->time->tv_usec;
+	pthread_create(phi->thread, NULL, &state_machine, phi);
+	return (start_philosophers(phi->next, params));
 }
 
-int	parse_args(int argc, char **argv, t_params *params)
+int	setup_table(t_philosopher *phi, t_params *params, size_t nbr, size_t total)
 {
-	if (str_conv_uint(argv[1], &params->philosopher_count))
+	phi->nbr = nbr;
+	phi->params = params;
+	if (nbr == total)
+	{
+		phi->next = NULL;
+		return (0);
+	}
+	else if (!(phi->next = malloc(sizeof(t_philosopher))))
 		return (1);
-	if (str_conv_uint(argv[2], &params->time_to_die))
-		return (1);
-	if (str_conv_uint(argv[3], &params->time_to_eat))
-		return (1);
-	if (str_conv_uint(argv[4], &params->time_to_sleep))
-		return (1);
-	if (argc == 6 && str_conv_uint(argv[5], &params->nbr_of_meals))
-		return (1);
-	printf("philosopher_count: %d\n", params->philosopher_count);
-	printf("time_to_die: %d\n", params->time_to_die);
-	printf("time_to_eat: %d\n", params->time_to_eat);
-	printf("time_to_sleep: %d\n", params->time_to_sleep);
-	if (params->nbr_of_meals)
-		printf("nbr_of_meals: %d\n", params->nbr_of_meals);
-	return (0);
+	return (setup_table(phi->next, params, nbr + 1, total));
+}
+
+int	init_philosopher(t_philosopher *phi, t_philosopher *first)
+{
+	if (!phi)
+		return (0);
+	if (!(phi->r_fork = malloc(sizeof(pthread_mutex_t))))
+		return (-1);
+	if (!(phi->thread = malloc(sizeof(pthread_t))))
+		return (-1);
+	if (!(phi->starvation = malloc(sizeof(struct timeval))))
+		return (-1);
+	pthread_mutex_init(phi->r_fork, NULL);
+	if (phi->next)
+		phi->next->l_fork = phi->r_fork;
+	else
+		first->l_fork = phi->r_fork;
+	return (init_philosopher(phi->next, first));
 }
 
 int	main(int argc, char **argv)
 {
-	t_params	params;
+	t_params		params;
+	t_philosopher	*phi;
+	t_philosopher	*tmp;
 
-	memset(&params, 0, sizeof(params));
+	memset(&params, 0, sizeof(t_params));
 	if (argc < 5 || argc > 6 || parse_args(argc, argv, &params))
 		return (-1);
+	if (!(phi = malloc(sizeof(t_philosopher))))
+		return (-1);
+	if (!(params.time = malloc(sizeof(struct timeval))))
+		return (-1);
+	if (setup_table(phi, &params, 1, params.philosopher_count))
+		return (-1);
+	if (init_philosopher(phi, phi))
+		return (-1);
+	if (gettimeofday(params.time, NULL))
+		return (-1);
+	if (start_philosophers(phi, &params))
+		return (-1);
+	tmp = phi;
+	while (tmp && tmp->state != DIED) //if now > tmp->starvation !DIED!
+		if (!(tmp = tmp->next))
+			tmp = phi;
 	return (1);
 }

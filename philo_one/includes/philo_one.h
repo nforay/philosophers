@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 18:46:28 by nforay            #+#    #+#             */
-/*   Updated: 2020/10/24 20:09:18 by nforay           ###   ########.fr       */
+/*   Updated: 2020/10/25 02:46:11 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <pthread.h>
 # include <sys/time.h>
-# include <sys/types.h>
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>

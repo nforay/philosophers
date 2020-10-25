@@ -19,7 +19,7 @@ RED			= \033[31;1m
 GRN			= \033[32;1m
 YEL			= \033[33;1m
 
-SRCS		= main.c
+SRCS		= main.c states.c utils.c
 OBJS		= $(SRCS:.c=.o)
 
 OBJ			= $(addprefix $(OBJ_PATH), $(OBJS))
@@ -28,7 +28,7 @@ all: $(NAME)
 
 $(NAME):		$(OBJ)
 				@echo "$(RED)[$(NAME)] : $(DEF)Linking..."
-				$(CC) $(CFLAGS) -lpthread $(INC) $(OBJ) -o $(NAME)
+				$(CC) $(CFLAGS) $(INC) $(OBJ) -lpthread -o $(NAME)
 				@echo "$(RED)[$(NAME)] : $(DEF)Compilation \t\t$(GRN)[OK]$(DEF)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
