@@ -12,6 +12,8 @@ else ifeq ($(DB),2)
 	CFLAGS	+= -g3 -fsanitize=address
 else ifeq ($(DB),3)
 	CFLAGS	=
+else
+	CFLAGS += -O3
 endif
 
 DEF			= \033[0m
@@ -19,7 +21,7 @@ RED			= \033[31;1m
 GRN			= \033[32;1m
 YEL			= \033[33;1m
 
-SRCS		= main.c states.c utils.c
+SRCS		= main.c states.c utils.c print.c
 OBJS		= $(SRCS:.c=.o)
 
 OBJ			= $(addprefix $(OBJ_PATH), $(OBJS))
