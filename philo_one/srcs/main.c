@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 18:35:48 by nforay            #+#    #+#             */
-/*   Updated: 2020/10/31 00:40:30 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/09 18:44:36 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int		start_philosophers(t_philosopher *phi, t_params *params)
 	if (!phi)
 		return (0);
 	phi->starvation = gettime_us() + params->time_to_die * 1000;
-	pthread_create(phi->thread, NULL, &state_machine, phi);
+	if (pthread_create(&phi->thread, NULL, &state_machine, phi) < 0)
+		return (start_philosophers(phi, params));
 	return (start_philosophers(phi->next, params));
 }
 
@@ -45,9 +46,7 @@ int		init_philosopher(t_philosopher *phi, t_philosopher *first)
 	phi->alive = 1;
 	phi->state = THINKING;
 	if (!(phi->r_fork = malloc(sizeof(pthread_mutex_t))))
-		return (-1);
-	if (!(phi->thread = malloc(sizeof(pthread_t))))
-		return (-1);
+		return (destroy_philisophers(first, first));
 	pthread_mutex_init(phi->r_fork, NULL);
 	if (phi->next)
 		phi->next->l_fork = phi->r_fork;
@@ -56,7 +55,7 @@ int		init_philosopher(t_philosopher *phi, t_philosopher *first)
 	if (phi->params->philosopher_count == 1)
 	{
 		if (!(phi->l_fork = malloc(sizeof(pthread_mutex_t))))
-			return (-1);
+			return (destroy_philisophers(first, first));
 		pthread_mutex_init(phi->l_fork, NULL);
 	}
 	return (init_philosopher(phi->next, first));

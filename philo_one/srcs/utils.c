@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/25 21:26:09 by nforay            #+#    #+#             */
-/*   Updated: 2020/10/31 00:43:40 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/09 18:43:48 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,16 @@ int				destroy_table(t_philosopher *phi)
 	return (-1);
 }
 
-void			destroy_philisophers(t_philosopher *phi, t_philosopher *tmp)
+int				destroy_philisophers(t_philosopher *phi, t_philosopher *tmp)
 {
 	while (tmp)
 	{
 		if (tmp->params->time)
-			pthread_join(*tmp->thread, NULL);
+			pthread_join(tmp->thread, NULL);
 		tmp = tmp->next;
 	}
 	while (phi)
 	{
-		if (phi->thread)
-			free(phi->thread);
 		if (phi->r_fork)
 		{
 			pthread_mutex_destroy(phi->r_fork);
@@ -52,6 +50,7 @@ void			destroy_philisophers(t_philosopher *phi, t_philosopher *tmp)
 		free(phi);
 		phi = tmp;
 	}
+	return (1);
 }
 
 static int		str_conv_uint(char *str, unsigned long long *nbr)
