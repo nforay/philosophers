@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/25 21:26:09 by nforay            #+#    #+#             */
-/*   Updated: 2020/11/09 19:17:40 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/15 18:54:17 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@ int				destroy_table(t_philosopher *phi)
 	t_philosopher	*tmp;
 
 	tmp = phi;
+	sem_close(phi->forks);
+	sem_unlink("/forks");
 	while (phi)
 	{
 		tmp = phi->next;
 		free(phi);
 		phi = tmp;
 	}
-	sem_unlink("/forks");
 	return (-1);
 }
 
@@ -35,11 +36,10 @@ int				destroy_philisophers(t_philosopher *phi, t_philosopher *tmp)
 			pthread_join(tmp->thread, NULL);
 		tmp = tmp->next;
 	}
+	sem_close(phi->forks);
 	sem_unlink("/forks");
 	while (phi)
 	{
-		if (phi->nbr == 1)
-			sem_close(phi->forks);
 		tmp = phi->next;
 		free(phi);
 		phi = tmp;

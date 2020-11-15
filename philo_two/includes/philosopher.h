@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 18:46:28 by nforay            #+#    #+#             */
-/*   Updated: 2020/11/09 19:06:12 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/15 18:57:38 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # define ERROR_4 "Error: invalid time_to_eat\n"
 # define ERROR_5 "Error: invalid time_to_sleep\n"
 # define ERROR_6 "Error: invalid number_of_time_each_philosophers_must_eat\n"
+# define ERROR_7 "Error: sem_open failed\n"
+# define ERROR_8 "Error: malloc failed\n"
 
 enum	e_state
 {

@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 18:35:48 by nforay            #+#    #+#             */
-/*   Updated: 2020/11/09 19:23:51 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/15 18:59:35 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		setup_table(t_philosopher *phi, t_params *params, size_t nbr,
 		phi->forks = sem_open("/forks", O_CREAT, 0660,
 			params->philosopher_count);
 		if (phi->forks == SEM_FAILED)
-			return (1);
+			return (print_error(ERROR_7, 24));
 	}
 	if (nbr == total)
 	{
@@ -39,7 +39,7 @@ int		setup_table(t_philosopher *phi, t_params *params, size_t nbr,
 		return (0);
 	}
 	else if (!(phi->next = malloc(sizeof(t_philosopher))))
-		return (1);
+		return (print_error(ERROR_8, 22));
 	memset(phi->next, 0, sizeof(t_philosopher));
 	phi->next->forks = phi->forks;
 	return (setup_table(phi->next, params, nbr + 1, total));
@@ -96,7 +96,7 @@ int		main(int argc, char **argv)
 	if (parse_args(argc, argv, &params))
 		return (1);
 	if (!(phi = malloc(sizeof(t_philosopher))))
-		return (-1);
+		return (print_error(ERROR_8, 22) * -1);
 	memset(phi, 0, sizeof(t_philosopher));
 	if (setup_table(phi, &params, 1, params.philosopher_count))
 		return (destroy_table(phi));
