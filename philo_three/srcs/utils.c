@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/25 21:26:09 by nforay            #+#    #+#             */
-/*   Updated: 2020/11/15 18:47:30 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/16 16:52:42 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ static int		check_number(char *str, size_t *nbr)
 
 int				print_error(char *str, int len)
 {
-	if (write(STDERR_FILENO, str, len))
-		return (1);
+	write(STDERR_FILENO, str, len);
 	return (1);
 }
 

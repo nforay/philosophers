@@ -12,8 +12,6 @@ else ifeq ($(DB),2)
 	CFLAGS	+= -g3 -fsanitize=address
 else ifeq ($(DB),3)
 	CFLAGS	=
-else
-	CFLAGS += -O3
 endif
 
 DEF			= \033[0m

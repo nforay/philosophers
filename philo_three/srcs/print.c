@@ -6,7 +6,7 @@
 /*   By: nforay <nforay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:40:49 by nforay            #+#    #+#             */
-/*   Updated: 2020/11/15 17:50:32 by nforay           ###   ########.fr       */
+/*   Updated: 2020/11/16 16:52:28 by nforay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ void			print_status(t_philosopher *phi, size_t nbr, char *str,
 		size++;
 	putstr_buff(str, &ptr);
 	sem_wait(phi->params->print);
-	if (write(STDOUT_FILENO, buff, size))
-	{
-		;
-	}
+	write(STDOUT_FILENO, buff, size);
 	sem_post(phi->params->print);
 }
 
@@ -79,6 +76,5 @@ void			force_print_status(t_philosopher *phi, size_t nbr, char *str,
 	while (nbr /= 10)
 		size++;
 	putstr_buff(str, &ptr);
-	if (write(STDOUT_FILENO, buff, size))
-		return ;
+	write(STDOUT_FILENO, buff, size);
 }
