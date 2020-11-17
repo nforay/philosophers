@@ -16,7 +16,6 @@ int				destroy_table(t_philosopher *phi)
 {
 	t_philosopher	*tmp;
 
-	tmp = phi;
 	sem_close(phi->forks);
 	sem_unlink("/forks");
 	while (phi)

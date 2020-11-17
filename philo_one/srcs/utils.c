@@ -16,7 +16,6 @@ int				destroy_table(t_philosopher *phi)
 {
 	t_philosopher	*tmp;
 
-	tmp = phi;
 	while (phi)
 	{
 		tmp = phi->next;
